@@ -199,6 +199,74 @@ def get_auth_token():
     access_token = IAMTokenManager(apikey=api_key,url="https://iam.cloud.ibm.com/identity/token").get_token()
     return access_token
 
+def owen_test():
+    body = {
+        "parameters": {
+            "decoding_method": "sample",
+            "max_new_tokens": 200,
+            "min_new_tokens": 50,
+            "random_seed": 111,
+            "temperature": 1.14,
+            "top_k": 50,
+            "top_p": 1,
+            "repetition_penalty": 2
+        },
+        "model_id": "google/flan-t5-xxl",
+        "project_id": watsonx_project_id,
+        "moderations": {
+            "hap": {
+                "input": {
+                    "enabled": True,
+                    "threshold": 0.5,
+                    "mask": {
+                        "remove_entity_value": True
+                    }
+                },
+                "output": {
+                    "enabled": True,
+                    "threshold": 0.5,
+                    "mask": {
+                        "remove_entity_value": True
+                    }
+                }
+            },
+            "pii": {
+                "input": {
+                    "enabled": True,
+                    "threshold": 0.5,
+                    "mask": {
+                        "remove_entity_value": True
+                    }
+                },
+                "output": {
+                    "enabled": True,
+                    "threshold": 0.5,
+                    "mask": {
+                        "remove_entity_value": True
+                    }
+                }
+            }
+        }
+    }
+
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + get_auth_token()
+    }
+
+    response = requests.post(
+        url,
+        headers=headers,
+        json=body
+    )
+    
+
+    if response.status_code != 200:
+        raise Exception("Non-200 response: " + str(response.text))
+
+    data = response.json()
+
 def demo_LLM_invocation():
 
     # Load the api key and project id
@@ -209,6 +277,8 @@ def demo_LLM_invocation():
     #get_list_of_complaints()
 
     # Simple prompt - invoked with the REST API
-    invoke_with_REST()
+    #invoke_with_REST()
+
+    owen_test()
 
 demo_LLM_invocation()
